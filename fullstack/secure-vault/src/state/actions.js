@@ -72,6 +72,15 @@ export function createActions(store, index) {
       }));
     },
 
+    expandAll() {
+      const folderIds = [...index.values()].filter(({ node }) => node.type === 'folder').map(({ node }) => node.id);
+      store.set({ expanded: new Set(folderIds) });
+    },
+
+    collapseAll() {
+      store.set({ expanded: new Set() });
+    },
+
     clearRecent() {
       store.set({ recent: [] });
     },

@@ -5,6 +5,31 @@
   gap: 6px;
 }
 
+.workspace__tools {
+  display: flex;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.icon-button:hover {
+  color: var(--color-text);
+  background: var(--color-surface-raised);
+}
+
 .tree,
 .tree__group {
   list-style: none;

@@ -6,8 +6,10 @@ import './styles/properties.css';
 import './styles/content.css';
 import './styles/search.css';
 import './styles/recent.css';
-import data from '../data.json';
+import vaultData from '../data.json';
+import { createTestData } from './utils/testData.js';
 import { el, renderInto } from './utils/dom.js';
+import { icon } from './utils/icons.js';
 import { buildIndex, getAncestors, filterTree } from './utils/tree.js';
 import { createStore } from './state/store.js';
 import { createActions } from './state/actions.js';
@@ -19,6 +21,10 @@ import { Properties } from './components/Properties.js';
 import { FolderView } from './components/FolderView.js';
 import { SearchBox } from './components/SearchBox.js';
 import { RecentFiles } from './components/RecentFiles.js';
+
+// Open the app with ?stress to add a 20-level folder and 1000 files
+const isStressTest = new URLSearchParams(location.search).has('stress');
+const data = isStressTest ? [...vaultData, ...createTestData()] : vaultData;
 
 const index = buildIndex(data);
 
@@ -81,7 +87,25 @@ function renderSidebar(state) {
     el(
       'section',
       { className: 'workspace' },
-      el('div', { className: 'section-label' }, isSearching ? 'Search results' : 'Workspace'),
+      el(
+        'div',
+        { className: 'section-label' },
+        isSearching ? 'Search results' : 'Workspace',
+        el(
+          'div',
+          { className: 'workspace__tools' },
+          el(
+            'button',
+            { type: 'button', className: 'icon-button', title: 'Expand all', 'aria-label': 'Expand all folders', onClick: actions.expandAll },
+            icon('expandAll'),
+          ),
+          el(
+            'button',
+            { type: 'button', className: 'icon-button', title: 'Collapse all', 'aria-label': 'Collapse all folders', onClick: actions.collapseAll },
+            icon('collapseAll'),
+          ),
+        ),
+      ),
       status,
       nodes.length > 0
         ? Tree({
