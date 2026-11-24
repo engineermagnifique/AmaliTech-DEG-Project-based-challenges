@@ -1,4 +1,5 @@
 import { getAncestors } from '../utils/tree.js';
+import { MAX_RECENT } from './storage.js';
 
 // All changes to the state go through these functions.
 // Each one also moves the keyboard focus to the item it acted on.
@@ -8,6 +9,11 @@ export function createActions(store, index) {
     const next = new Set(expanded);
     getAncestors(index, id).forEach((folder) => next.add(folder.id));
     return next;
+  }
+
+  // Puts a file at the top of the recent list (no duplicates)
+  function addToRecent(recent, id) {
+    return [id, ...recent.filter((recentId) => recentId !== id)].slice(0, MAX_RECENT);
   }
 
   function setExpanded(id, open) {
@@ -48,16 +54,26 @@ export function createActions(store, index) {
 
     // "Show in folder": open the path to a file in the tree and select it.
     revealFile(id) {
-      store.set(({ expanded }) => ({
+      store.set(({ expanded, recent }) => ({
         expanded: openParents(expanded, id),
         currentFolderId: index.get(id).parentId,
         selectedId: id,
         focusedId: id,
+        recent: addToRecent(recent, id),
       }));
     },
 
     selectFile(id) {
-      store.set({ selectedId: id, focusedId: id, currentFolderId: index.get(id).parentId });
+      store.set(({ recent }) => ({
+        selectedId: id,
+        focusedId: id,
+        currentFolderId: index.get(id).parentId,
+        recent: addToRecent(recent, id),
+      }));
+    },
+
+    clearRecent() {
+      store.set({ recent: [] });
     },
 
     focusItem(id) {

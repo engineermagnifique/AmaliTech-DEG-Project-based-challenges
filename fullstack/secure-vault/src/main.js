@@ -5,17 +5,20 @@ import './styles/tree.css';
 import './styles/properties.css';
 import './styles/content.css';
 import './styles/search.css';
+import './styles/recent.css';
 import data from '../data.json';
 import { el, renderInto } from './utils/dom.js';
 import { buildIndex, getAncestors, filterTree } from './utils/tree.js';
 import { createStore } from './state/store.js';
 import { createActions } from './state/actions.js';
+import { loadRecent, saveRecent } from './state/storage.js';
 import { createLayout } from './components/Layout.js';
 import { Tree } from './components/Tree.js';
 import { handleTreeKey } from './components/treeKeyboard.js';
 import { Properties } from './components/Properties.js';
 import { FolderView } from './components/FolderView.js';
 import { SearchBox } from './components/SearchBox.js';
+import { RecentFiles } from './components/RecentFiles.js';
 
 const index = buildIndex(data);
 
@@ -26,6 +29,7 @@ const store = createStore({
   currentFolderId: null, // folder shown in the main area (null = top level)
   listFilter: 'all', // 'all' | 'folder' | 'file'
   query: '', // search text
+  recent: loadRecent(index), // ids of recently opened files, newest first
 });
 const actions = createActions(store, index);
 
@@ -60,7 +64,7 @@ document.addEventListener('keydown', (event) => {
 
 function renderSidebar(state) {
   // The tree is rebuilt on every render, so remember if it had focus
-  const treeHadFocus = layout.sidebar.contains(document.activeElement);
+  const treeHadFocus = layout.sidebar.querySelector('.tree')?.contains(document.activeElement);
 
   const isSearching = state.query.trim() !== '';
   const result = isSearching ? filterTree(data, state.query) : null;
@@ -73,6 +77,7 @@ function renderSidebar(state) {
   }
 
   layout.sidebar.replaceChildren(
+    RecentFiles({ ids: state.recent, index, onOpen: showInFolder, onClear: actions.clearRecent }) ?? '',
     el(
       'section',
       { className: 'workspace' },
@@ -140,4 +145,5 @@ function render() {
 }
 
 store.subscribe(render);
+store.subscribe((state) => saveRecent(state.recent));
 render();
