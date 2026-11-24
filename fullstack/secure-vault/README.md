@@ -1,123 +1,87 @@
-# SecureVault-Dashboard
+# SecureVault Explorer
 
-This challenge is designed to test your ability to bridge Computer Science fundamentals with Modern Frontend Engineering.
+A file explorer for SecureVault Inc. that lets users navigate deeply nested folders, inspect file details and move through the vault using only the keyboard. It is built with vanilla JavaScript and plain CSS, without any component library.
 
-## 1. Business Scenario & Context
+**Live Demo:** _[paste live link here]_
 
-**Client:** SecureVault Inc.
-**Industry:** Enterprise Cloud Security
+## Setup Instructions
 
-**The Problem:** SecureVault offers high-security cloud storage for law firms and banks. Their backend engineers have built a robust API that returns folder structures efficiently. However, their current frontend is a simple list that is hard to navigate. Clients are complaining that they can't manage nested files easily.
+### Prerequisites
 
-**Your Role:** You are the incoming Junior Frontend Engineer. Your task is to design and build a modern, high-performance "File Explorer" UI that impresses the CTO and the Design Lead.
+Make sure you have the following installed:
 
----
+- Node.js
+- npm
+- Git
 
-## 2. The Assignment Stages
+### Installation
 
-This is a **hybrid design/engineering challenge**. You are expected to demonstrate competence in both visual design logic and algorithmic frontend implementation.
+1. Clone the repository:
 
-### Phase 1: The Design System
+```bash
+git clone https://github.com/engineermagnifique/AmaliTech-DEG-Project-based-challenges.git
+```
 
-**Before writing code, you must design the interface.**
+2. Navigate to the SecureVault project:
 
-- **Deliverable:** A link to a design file (Figma, Penpot, or Sketch) or a PDF export of your design frames.
-- **Requirement:** Your design file must include a dedicated **"Design System" page** that defines:
-  - **Typography Scale**
-  - **Color Palette**
-  - **Spacing Grid**
-  - **Component States**
-- **Brand Guidelines:** SecureVault wants a "Dark Mode" aesthetic that feels "cyber-secure, precise, and fast."
+```bash
+cd AmaliTech-DEG-Project-based-challenges/fullstack/secure-vault
+```
 
-### Phase 2: The Implementation
+3. Install the dependencies:
 
-**Build the application using the design system you created in Phase 1.**
+```bash
+npm install
+```
 
-- **Constraint:** You **cannot** use component libraries like Bootstrap, Material UI, Chakra UI, or Ant Design. You must build your components from scratch to prove you understand CSS layout and component abstraction.
-- **Note:** CSS frameworks like Tailwind are allowed _only_ if you use them to build your own reusable component architecture.
+4. Start the development server:
 
----
+```bash
+npm run dev
+```
 
-## 3. User Stories & Acceptance Criteria
+5. Open the local URL provided by Vite in your browser.
 
-### Core Features (Required)
+## Design File
 
-#### Story 1: The Recursive Tree
+_[paste Figma link here]_
 
-> "As a lawyer with 10 years of case files, I need to navigate deeply nested folders without reloading the page."
+## Recursive Strategy
 
-- **AC 1:** The UI renders the folder structure from the provided JSON.
-- **AC 2:** The component structure must be **recursive**. It should handle 2 levels of depth or 20 levels without breaking the UI.
-- **AC 3:** Folders must expand/collapse on click.
+The vault is represented as a tree data structure.
 
-#### Story 2: File Details & Inspection
+Each node contains an `id`, `name` and `type`. File nodes also have a `size`, and folder nodes contain a `children` array with their nested files and folders.
 
-> "As a user, I need to see file metadata to ensure I'm opening the right version."
+For example:
 
-- **AC 1:** Clicking a file "selects" it (distinct visual state based on your design).
-- **AC 2:** A "Properties Panel" displays the selected file's Name, Type, and Size.
+```
+Folder
+├── File
+├── Folder
+│   ├── File
+│   └── Folder
+│       └── File
+└── File
+```
 
-#### Story 3: Keyboard Accessibility
+The `TreeNode` component uses recursion to render this structure. It renders one row, and when the node is an open folder, it renders another `TreeNode` for each child with the depth increased by one. The recursion stops at files and closed folders.
 
-> "As a power user, I hate reaching for my mouse. I want to navigate the vault using only my keyboard."
+Because no depth is fixed in the code, the same component handles 2 levels or 20 levels. The depth is only used for indentation, which becomes smaller after the sixth level so that deep folders still fit in the sidebar.
 
-- **AC 1:** `Up/Down` arrows move focus between the visible items in the explorer.
-- **AC 2:** `Right` arrow expands a folder; `Left` arrow collapses it.
-- **AC 3:** `Enter` selects the file.
+The same recursive approach is used by the utility functions that traverse the tree:
 
-### The "Wildcard" Feature (Required)
+- `buildIndex` walks the tree once and stores every node by its id with its parent id. This makes it fast to find any node and the path from the root to it, which is used for breadcrumbs and the file location.
+- `getVisibleIds` lists the items currently shown on screen, which is used for keyboard navigation with the arrow keys.
+- `filterTree` returns a filtered copy of the tree for search, and finds the folders that must open to show the matches.
 
-#### Story 4: The Innovation Clause
+To test deep nesting, open the app with `?stress` at the end of the URL. This adds a folder 20 levels deep and a folder with 1,000 files, without changing `data.json`.
 
-> "As a developer, I want to add one feature that the client didn't ask for, but would significantly improve the user experience."
+## Wildcard Feature
 
-- **Task:** Identify a gap in the requirements. What is missing?
-- **AC 1:** Implement **one** additional feature of your choice.
-- **AC 2:** In your README, explain _why_ you chose this feature and how it adds value to the business.
+As an additional feature beyond the core requirements, I identified a missing part of the user experience: a quick way to return to the files a user works with most.
 
-### Bonus Feature (Optional)
+The sidebar contains a **Recent** section that shows the last five files the user opened, with the newest first. Clicking a recent file opens all of its parent folders in the tree, selects it and shows its details in the properties panel. The list is saved in the browser, so it is still available after the page is reloaded, and it can be cleared at any time.
 
-#### Story 5: Search & Filter
+I considered this an important addition because users rarely browse a vault at random. A lawyer working on a case goes back to the same few documents many times a day, and without this feature, each visit means clicking through several levels of folders again. Recent Files reduces this to a single click, which saves time on every visit and makes the explorer faster to use.
 
-- **AC 1:** A search bar filters the view. Matching items deep inside folders should force those folders to expand automatically.
-
----
-
-## 4. Technical Requirements
-
-- **Data:** Use the `data.json` file provided in this repo. Do not edit the JSON structure, but you may add more items to test performance.
-- **Tech Stack:** React, Vue, Svelte, or Vanilla JS.
-- **Documentation:** Your README in the submission must include:
-  1.  Setup instructions.
-  2.  Link to your Design File.
-  3.  Explanation of your **Recursive Strategy** (how you managed the data structure).
-  4.  Explanation of your **Wildcard Feature**.
-
----
-
-## 5. Submission Instructions
-
-1.  **Fork** this repository.
-2.  Complete the code in your fork.
-3.  **Update the README:**
-    - **Delete** all the instructions in this file (the text you are reading now).
-    - **Replace** them with your own documentation as outlined in Section 4.
-    - _Note: Do not append your docs to the end. The final README should look like a professional project documentation, not a homework assignment._
-4.  Submit your repo link via the [online](https://forms.cloud.microsoft/e/PrfSgKKQ0k) form.
-
----
-
-### ⚠️ CRITICAL: Pre-Submission Checklist
-
-**STOP and review your work.** To be eligible for the Solution Defense interview, your submission **MUST** pass the following "Gatekeeper" checks.
-
-If any of the following are incorrect, your submission will be flagged as incomplete and you will **NOT** be invited for an interview.
-
-1.  **Public Repository:** Is your GitHub repository set to **Public**? (Private links will be auto-rejected).
-2.  **Audit-Ready History:** Does your Git commit history show your progress over time? (Repositories with a single "Initial Commit" or "Upload files" containing the entire project will be **rejected as unverifiable**).
-3.  **Working Deployment:** Have you tested your live link in an **Incognito/Private** window to ensure it loads without errors?
-4.  **No Restricted Libraries:** Did you build your own components? (Submissions using **Bootstrap, Material UI, or Chakra UI** will be disqualified).
-5.  **Design File Access:** Is your Figma/Penpot link included and set to **"Anyone with the link can view"**?
-6.  **Documentation:** Have you deleted the original assignment text from the `README.md` and replaced it with your own project documentation?
-
-> **By submitting your work, you acknowledge that failure to meet these criteria effectively ends your application process.**
+The list is stored only in the user's own browser and is never sent to a server, which suits a security product. If browser storage is not available, the application continues to work normally without remembering the list.
