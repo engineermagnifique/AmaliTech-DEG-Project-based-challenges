@@ -22,27 +22,27 @@ import { FolderView } from './components/FolderView.js';
 import { SearchBox } from './components/SearchBox.js';
 import { RecentFiles } from './components/RecentFiles.js';
 
-// Open the app with ?stress to add a 20-level folder and 1000 files
+// Add ?stress to the URL to load extra test data
 const isStressTest = new URLSearchParams(location.search).has('stress');
 const data = isStressTest ? [...vaultData, ...createTestData()] : vaultData;
 
 const index = buildIndex(data);
 
 const store = createStore({
-  expanded: new Set(['root_1', 'leg_1']), // ids of open folders
-  selectedId: null, // id of the selected file
-  focusedId: null, // id of the item with keyboard focus
-  currentFolderId: null, // folder shown in the main area (null = top level)
+  expanded: new Set(['root_1', 'leg_1']), // open folder ids
+  selectedId: null,
+  focusedId: null, // tree item with keyboard focus
+  currentFolderId: null, // null = top level
   listFilter: 'all', // 'all' | 'folder' | 'file'
-  query: '', // search text
-  recent: loadRecent(index), // ids of recently opened files, newest first
+  query: '',
+  recent: loadRecent(index), // file ids, newest first
 });
 const actions = createActions(store, index);
 
 const layout = createLayout();
 document.getElementById('app').replaceWith(layout.root);
 
-// The tree to show: everything, or only the search results
+/** Full tree, or only the search results. */
 function getTreeNodes(state) {
   return state.query.trim() ? filterTree(data, state.query).nodes : data;
 }
@@ -59,7 +59,7 @@ function onTreeKeyDown(event) {
 
 layout.search.append(SearchBox({ onSearch }));
 
-// Press "/" anywhere to jump to the search box
+// Shortcut: "/" focuses the search box
 document.addEventListener('keydown', (event) => {
   const typing = event.target.closest('input, textarea');
   if (event.key === '/' && !typing) {
@@ -69,7 +69,7 @@ document.addEventListener('keydown', (event) => {
 });
 
 function renderSidebar(state) {
-  // The tree is rebuilt on every render, so remember if it had focus
+  // The tree is rebuilt, so restore focus afterwards
   const treeHadFocus = layout.sidebar.querySelector('.tree')?.contains(document.activeElement);
 
   const isSearching = state.query.trim() !== '';
@@ -141,7 +141,7 @@ function renderMain(state) {
   );
 }
 
-// Opens the file's folders, then moves keyboard focus to it in the tree
+/** Reveals a file in the tree and focuses it. */
 function showInFolder(id) {
   actions.revealFile(id);
   const item = layout.sidebar.querySelector(`[data-id="${id}"]`);

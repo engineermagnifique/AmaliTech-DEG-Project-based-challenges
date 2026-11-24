@@ -1,11 +1,11 @@
 import { getVisibleIds } from '../utils/tree.js';
 
-// Keyboard control for the tree, following the WAI-ARIA tree pattern.
+/** Keyboard navigation for the tree (WAI-ARIA tree pattern). */
 export function handleTreeKey(event, { nodes, index, state, actions }) {
   const visible = getVisibleIds(nodes, state.expanded);
   if (visible.length === 0) return;
 
-  // If the focused item is hidden, start from the first item
+  // Fall back to the first item if the focused one is hidden
   const position = Math.max(visible.indexOf(state.focusedId), 0);
   const id = visible[position];
   const { node, parentId } = index.get(id);
@@ -20,7 +20,7 @@ export function handleTreeKey(event, { nodes, index, state, actions }) {
       actions.focusItem(visible[Math.max(position - 1, 0)]);
       break;
     case 'ArrowRight':
-      // Closed folder: open it. Open folder: go to its first visible child.
+      // Open the folder, or move to its first child
       if (isFolder && !isOpen) {
         actions.expandFolder(id);
       } else if (isOpen) {
@@ -29,7 +29,7 @@ export function handleTreeKey(event, { nodes, index, state, actions }) {
       }
       break;
     case 'ArrowLeft':
-      // Open folder: close it. Otherwise: go up to the parent folder.
+      // Close the folder, or move to the parent
       if (isOpen) actions.collapseFolder(id);
       else if (parentId) actions.focusItem(parentId);
       break;
@@ -44,8 +44,8 @@ export function handleTreeKey(event, { nodes, index, state, actions }) {
       else actions.selectFile(id);
       break;
     default:
-      return; // other keys keep their normal behaviour
+      return;
   }
 
-  event.preventDefault(); // stop arrow keys from scrolling the page
+  event.preventDefault();
 }

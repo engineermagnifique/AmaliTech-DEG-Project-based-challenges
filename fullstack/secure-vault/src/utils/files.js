@@ -1,4 +1,4 @@
-// Known file extensions: readable format name and badge colour group.
+// Format name and badge colour group per extension
 const FORMATS = {
   pdf: { format: 'PDF document', kind: 'pdf' },
   doc: { format: 'Word document', kind: 'doc' },
@@ -15,7 +15,7 @@ const FORMATS = {
   ttf: { format: 'TrueType font', kind: 'other' },
 };
 
-// "Case_Summary.docx" -> { baseName: "Case_Summary", type: "DOCX", format: "Word document", kind: "doc" }
+/** Returns name, type and format details for a file name. */
 export function getFileInfo(name) {
   const dot = name.lastIndexOf('.');
   const hasExtension = dot > 0; // ".gitignore" has no extension
@@ -31,7 +31,7 @@ export function getFileInfo(name) {
   };
 }
 
-// "4.2MB" -> "4.2 MB"
+/** Formats a size string, e.g. "4.2MB" -> "4.2 MB". */
 export function formatSize(size) {
   if (!size) return '—';
   return size.replace(/^([\d.]+)\s*([a-zA-Z]+)$/, '$1 $2');

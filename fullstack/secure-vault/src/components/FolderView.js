@@ -83,7 +83,7 @@ function KeyboardHints() {
   );
 }
 
-// Main area: the content of the current folder (or the top level).
+/** Main area: contents of the current folder. */
 export function FolderView({ folder, ancestors, items, state, actions }) {
   const folders = items.filter((item) => item.type === 'folder');
   const files = items.filter((item) => item.type === 'file');

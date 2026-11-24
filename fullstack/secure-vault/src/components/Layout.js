@@ -10,8 +10,7 @@ function Brand() {
   );
 }
 
-// Page with 3 columns. Returns each column so we can render into it.
-// The search slot is separate so the search box is not re-rendered.
+/** Creates the three-column page and returns each region. */
 export function createLayout() {
   const search = el('div', { className: 'sidebar__search' });
   const sidebarBody = el('div', { className: 'sidebar__body' });
@@ -19,7 +18,7 @@ export function createLayout() {
 
   const main = el('main', { className: 'content' });
 
-  // aria-live: screen readers read the new details when the selection changes
+  // aria-live announces selection changes to screen readers
   const properties = el('aside', { className: 'properties', 'aria-label': 'File properties', 'aria-live': 'polite' });
 
   const root = el('div', { className: 'app' }, sidebar, main, properties);

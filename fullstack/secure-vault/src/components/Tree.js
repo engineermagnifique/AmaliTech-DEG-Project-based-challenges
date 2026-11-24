@@ -1,8 +1,9 @@
 import { el, highlight } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
 
+/** File explorer tree. */
 export function Tree({ nodes, state, onToggle, onSelect, onKeyDown }) {
-  // One click listener for the whole tree (event delegation)
+  // Event delegation: one listener for all rows
   function handleClick(event) {
     const row = event.target.closest('.tree__row');
     if (!row) return;
@@ -12,7 +13,7 @@ export function Tree({ nodes, state, onToggle, onSelect, onKeyDown }) {
     else onSelect(item.dataset.id);
   }
 
-  // Only one item can be reached with Tab (roving tabindex)
+  // Roving tabindex: only one item is in the Tab order
   const activeId = state.focusedId ?? nodes[0]?.id;
 
   return el(
@@ -28,8 +29,7 @@ export function Tree({ nodes, state, onToggle, onSelect, onKeyDown }) {
   );
 }
 
-// Recursive: an open folder calls TreeNode again for each child.
-// It stops at files and closed folders, so any depth works.
+/** Renders one node. Calls itself for the children of open folders. */
 function TreeNode({ node, depth, state, activeId }) {
   const isFolder = node.type === 'folder';
   const children = node.children ?? [];

@@ -2,7 +2,7 @@ import { el } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
 import { FileBadge } from './FileBadge.js';
 
-// Last opened files, newest first. Hidden when the list is empty.
+/** Recently opened files, newest first. */
 export function RecentFiles({ ids, index, onOpen, onClear }) {
   if (ids.length === 0) return null;
 

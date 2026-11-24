@@ -1,4 +1,7 @@
-// Creates an element. Example: el('button', { className: 'pill', onClick: fn }, 'Files')
+/**
+ * Creates a DOM element.
+ * Example: el('button', { className: 'pill', onClick: fn }, 'Files')
+ */
 export function el(tag, props = {}, ...children) {
   const node = document.createElement(tag);
 
@@ -24,7 +27,7 @@ export function el(tag, props = {}, ...children) {
   return node;
 }
 
-// Wraps the part of the text that matches the search in <mark>.
+/** Wraps the matching part of `text` in a <mark>. */
 export function highlight(text, query) {
   const start = query ? text.toLowerCase().indexOf(query.trim().toLowerCase()) : -1;
   if (!query.trim() || start === -1) return [text];
@@ -33,8 +36,7 @@ export function highlight(text, query) {
   return [text.slice(0, start), el('mark', {}, text.slice(start, end)), text.slice(end)];
 }
 
-// Replaces the content of a container but keeps focus on the same button.
-// Buttons are matched by their data-key attribute.
+/** Replaces a container's content and keeps focus (matched by data-key). */
 export function renderInto(container, children) {
   const active = document.activeElement;
   const key = container.contains(active) ? active.dataset.key : null;

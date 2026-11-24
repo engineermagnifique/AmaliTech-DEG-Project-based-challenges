@@ -1,7 +1,7 @@
 import { el } from '../utils/dom.js';
 import { icon } from '../utils/icons.js';
 
-// Created once and never re-rendered, so typing is never interrupted.
+/** Search input. Rendered once so typing is not interrupted. */
 export function SearchBox({ onSearch }) {
   const input = el('input', {
     id: 'vault-search',
@@ -27,7 +27,7 @@ export function SearchBox({ onSearch }) {
 
   input.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') update('');
-    // Arrow down jumps from the search into the results
+    // Move focus from the input into the results
     if (event.key === 'ArrowDown') {
       event.preventDefault();
       document.querySelector('.tree [tabindex="0"]')?.focus();

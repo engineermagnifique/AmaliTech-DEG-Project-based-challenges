@@ -1,7 +1,6 @@
-// Extra data for testing, added only when the URL has ?stress
-// It uses the same structure as data.json: id, name, type, children / size.
+// Test data for ?stress, using the same structure as data.json
 
-// One folder chain that is `depth` levels deep, with a file at the bottom.
+/** Folder chain `depth` levels deep with a file at the bottom. */
 function deepFolder(depth) {
   let node = { id: 'deep_file', name: `Level_${depth}_Final_Report.pdf`, type: 'file', size: '2.4MB' };
 
@@ -11,7 +10,7 @@ function deepFolder(depth) {
   return node;
 }
 
-// One folder with many files, to test a long list.
+/** One folder with `count` files. */
 function bigFolder(count) {
   const children = [];
   for (let i = 1; i <= count; i += 1) {

@@ -49,7 +49,7 @@ kbd {
   padding: 0 5px;
 }
 
-/* Hidden, but screen readers can read it */
+/* Visually hidden, still read by screen readers */
 .sr-only {
   position: absolute;
   width: 1px;

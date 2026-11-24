@@ -1,4 +1,4 @@
-/* ---------- Recursive file tree ---------- */
+/* Tree */
 .workspace {
   display: flex;
   flex-direction: column;
@@ -49,7 +49,7 @@
   flex-direction: column;
 }
 
-/* Indent: 20px per level for the first 6 levels, then 10px, so deep trees still fit */
+/* 20px indent for the first 6 levels, then 10px so deep trees fit */
 .tree__row,
 .tree__empty {
   --indent: calc(6px + min(var(--depth), 6) * var(--tree-indent) + max(var(--depth) - 6, 0) * 10px);
@@ -95,7 +95,7 @@
   white-space: nowrap;
 }
 
-/* Keyboard focus: draw the ring on the row, not around the whole subtree */
+/* Focus ring on the row only, not the whole subtree */
 .tree__item:focus-visible {
   outline: none;
 }

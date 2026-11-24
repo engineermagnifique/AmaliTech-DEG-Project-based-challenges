@@ -1,3 +1,4 @@
+/* Search */
 .searchbox {
   display: flex;
   align-items: center;
@@ -27,7 +28,7 @@
   font-style: italic;
 }
 
-/* Hide the browser's own clear button, we have ours */
+/* Hide the browser's default clear button */
 .searchbox input::-webkit-search-cancel-button {
   display: none;
 }

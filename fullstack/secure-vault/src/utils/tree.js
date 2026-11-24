@@ -1,5 +1,4 @@
-// Walks the whole tree once (recursively) and saves each node by id with its parent id.
-// After this, finding any node is instant: index.get(id).
+/** Maps every node id to { node, parentId } for fast lookups. */
 export function buildIndex(nodes, parentId = null, index = new Map()) {
   for (const node of nodes) {
     index.set(node.id, { node, parentId });
@@ -8,7 +7,7 @@ export function buildIndex(nodes, parentId = null, index = new Map()) {
   return index;
 }
 
-// Ids of the items you can see now, top to bottom. Only goes inside open folders.
+/** Ids of visible items in display order. */
 export function getVisibleIds(nodes, expanded, result = []) {
   for (const node of nodes) {
     result.push(node.id);
@@ -19,8 +18,10 @@ export function getVisibleIds(nodes, expanded, result = []) {
   return result;
 }
 
-// Search. Returns a smaller copy of the tree: the matches plus the folders that lead to them.
-// openIds = folders that hold a match deeper inside, so they must be opened.
+/**
+ * Returns a filtered copy of the tree with matches and their parent folders.
+ * openIds lists the folders that must open to show the matches.
+ */
 export function filterTree(nodes, query) {
   const text = query.trim().toLowerCase();
   const openIds = new Set();
@@ -36,7 +37,7 @@ export function filterTree(nodes, query) {
 
       if (children.length > 0) {
         openIds.add(node.id);
-        result.push({ ...node, children }); // copy, the original data is not changed
+        result.push({ ...node, children }); // copy, original data stays unchanged
       } else if (isMatch) {
         result.push(node);
       }
@@ -47,7 +48,7 @@ export function filterTree(nodes, query) {
   return { nodes: visit(nodes), openIds, matchCount };
 }
 
-// Folders above a node, from the top level down.
+/** Parent folders of a node, from the top level down. */
 export function getAncestors(index, id) {
   const ancestors = [];
   let parentId = index.get(id)?.parentId;

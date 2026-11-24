@@ -1,4 +1,4 @@
-// Holds the app state and re-renders the UI when it changes.
+/** Simple state store with change listeners. */
 export function createStore(initialState) {
   let state = initialState;
   const listeners = new Set();

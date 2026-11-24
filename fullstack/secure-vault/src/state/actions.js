@@ -1,24 +1,23 @@
 import { getAncestors } from '../utils/tree.js';
 import { MAX_RECENT } from './storage.js';
 
-// All changes to the state go through these functions.
-// Each one also moves the keyboard focus to the item it acted on.
+/** All state changes go through these actions. */
 export function createActions(store, index) {
-  // Copy of the open folders, plus every folder above the given item.
+  // Returns a new Set with all parent folders of `id` opened
   function openParents(expanded, id) {
     const next = new Set(expanded);
     getAncestors(index, id).forEach((folder) => next.add(folder.id));
     return next;
   }
 
-  // Puts a file at the top of the recent list (no duplicates)
+  // Moves `id` to the front of the list, without duplicates
   function addToRecent(recent, id) {
     return [id, ...recent.filter((recentId) => recentId !== id)].slice(0, MAX_RECENT);
   }
 
   function setExpanded(id, open) {
     store.set(({ expanded }) => {
-      const next = new Set(expanded); // copy, do not change the old Set
+      const next = new Set(expanded); // copy, never mutate state
       if (open) next.add(id);
       else next.delete(id);
       return { expanded: next, focusedId: id, currentFolderId: id };
@@ -38,8 +37,7 @@ export function createActions(store, index) {
       setExpanded(id, false);
     },
 
-    // Show a folder in the main area and open it (and its parents) in the tree.
-    // id = null means the top level "Workspace".
+    // Shows a folder and opens its path. null = top level.
     openFolder(id) {
       if (!id) {
         store.set({ currentFolderId: null });
@@ -52,7 +50,7 @@ export function createActions(store, index) {
       });
     },
 
-    // "Show in folder": open the path to a file in the tree and select it.
+    // Opens the path to a file and selects it
     revealFile(id) {
       store.set(({ expanded, recent }) => ({
         expanded: openParents(expanded, id),
@@ -89,7 +87,7 @@ export function createActions(store, index) {
       store.set({ focusedId: id });
     },
 
-    // Saves the search text and opens the folders that hold matches
+    // Saves the query and opens folders that contain matches
     setQuery(query, openIds) {
       store.set(({ expanded }) => ({
         query,

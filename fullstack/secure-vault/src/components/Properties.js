@@ -7,7 +7,7 @@ function Field(label, value, className = '') {
   return [el('dt', {}, `${label}:`), el('dd', { className }, value)];
 }
 
-// Right panel. Shows the selected file, or a message when nothing is selected.
+/** Properties panel for the selected file. */
 export function Properties({ node, ancestors, onShowInFolder }) {
   const title = el('h2', { className: 'section-label' }, 'Properties');
 
