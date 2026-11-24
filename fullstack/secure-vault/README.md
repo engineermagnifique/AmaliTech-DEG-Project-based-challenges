@@ -76,6 +76,21 @@ The same recursive approach is used by the utility functions that traverse the t
 
 To test deep nesting, open the app with `?stress` at the end of the URL. This adds a folder 20 levels deep and a folder with 1,000 files, without changing `data.json`.
 
+## Search
+
+The search bar in the sidebar filters the tree as the user types. Matching text is highlighted, and folders that contain a match deep inside are expanded automatically so the result is always visible. Press `Esc` to clear the search.
+
+## Keyboard Shortcuts
+
+| Key | Action |
+|---|---|
+| `↑` / `↓` | Move between visible items |
+| `→` | Expand a folder, or move to its first child |
+| `←` | Collapse a folder, or move to its parent |
+| `Enter` | Select a file, or open and close a folder |
+| `Home` / `End` | Move to the first or last item |
+| `/` | Focus the search bar |
+
 ## Wildcard Feature
 
 As an additional feature beyond the core requirements, I identified a missing part of the user experience: a quick way to return to the files a user works with most.
