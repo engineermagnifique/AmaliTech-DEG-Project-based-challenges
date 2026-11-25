@@ -2,7 +2,7 @@
 
 A file explorer for SecureVault Inc. that lets users navigate deeply nested folders, inspect file details and move through the vault using only the keyboard. It is built with vanilla JavaScript and plain CSS, without any component library.
 
-**Live Demo:** _[paste live link here]_
+**Live Demo:** _[https://www.figma.com/design/gXz9FKE59psqSkCYviYLGi/SecureVault-%E2%80%93-Dashboard?node-id=2001-3&t=c74wiCR5UrrYUDlS-1]_
 
 ## Setup Instructions
 
